@@ -24,7 +24,7 @@ import UserBookings from './pages/admin/UserBookings';
 
 const App = () => {
   const location = useLocation();
-  const isAdminRoute = location.pathname.startsWith('/admindashboard');
+  const isAdminRoute = /^\/(admindashboard|users|user\/)/.test(location.pathname);
 
   // Debug routing
   useEffect(() => {
