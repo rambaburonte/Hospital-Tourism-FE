@@ -40,13 +40,14 @@ import TranslatorsUpdateForm from './pages/admin/TranslatorsUpdateForm';
 import EditProfile from './pages/user/EditProfile'; 
 import UserCart from './pages/user/UserCart'; 
 import { CartProvider } from './context/CartContext';
-
+import UploadPharmacyProductPage from './pages/admin/UploadPharmacyProductPage';
+import AdminPharmacyProductsPage from './pages/admin/PharmacyProductsPage';
 
 import PaymentPage from './pages/PaymentPage';
 
 const App = () => {
   const location = useLocation();
-  const isAdminRoute = /^\/(admindashboard|users|user\/|admin\/(doctors|spa|physiotherapist|translators)\/(upload|listing|detail\/\d+|update\/\d+))/.test(location.pathname);
+  const isAdminRoute = /^\/(admindashboard|users|user\/|admin\/(doctors|spa|physiotherapist|translators|pharamacyProducts|pharamcy)\/(upload|listing|detail\/\d+|update\/\d+))/.test(location.pathname);
 
   // Debug routing
   useEffect(() => {
@@ -97,6 +98,8 @@ const App = () => {
           <Route path="/admin/translators/update/:id" element={<TranslatorsUpdateForm />} />
           <Route path="/edit-profile" element={<EditProfile />} />
           <Route path="/cart" element={<UserCart />} />
+          <Route path="/admin/pharamacyProducts/upload" element={<UploadPharmacyProductPage />} />
+          <Route path="/admin/pharamcy/listing" element={<AdminPharmacyProductsPage />} />
 
           <Route path="/payment" element={<PaymentPage />} />
         </Routes>

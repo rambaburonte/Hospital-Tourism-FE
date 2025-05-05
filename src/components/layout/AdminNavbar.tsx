@@ -117,6 +117,13 @@ const AdminNavbar = () => {
                   >
                     Translators
                   </Link>
+                  <Link
+                    to="/admin/pharamacyProducts/upload"
+                    className="block px-4 py-2 hover:bg-gray-100"
+                    onClick={() => setUploadDropdownOpen(false)}
+                  >
+                    pharamcyProducts
+                  </Link>
                 </li>
               </ul>
             )}
@@ -160,6 +167,13 @@ const AdminNavbar = () => {
                     onClick={() => setManagementDropdownOpen(false)}
                   >
                     Spa
+                  </Link>
+                  <Link
+                    to="/admin/pharamcy/listing"
+                    className="block px-4 py-2 hover:bg-gray-100"
+                    onClick={() => setManagementDropdownOpen(false)}
+                  >
+                    pharmacyProducts
                   </Link>
                 </li>
                 <li>
