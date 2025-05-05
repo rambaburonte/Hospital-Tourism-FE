@@ -21,10 +21,32 @@ import NotFoundPage from './pages/NotFoundPage';
 import PharmacyPage from './pages/Pharmacy';
 import Users from './pages/admin/Users';
 import UserBookings from './pages/admin/UserBookings';
+import DoctorUploadForm from './pages/admin/DoctorUploadForm';
+import DoctorsListing from './pages/admin/DoctorsListing';
+import SpaUploadForm from './pages/admin/SpaUploadForm';
+import TranslatorsUploadForm from './pages/admin/TranslatorsUploadForm';
+import PhysiotherapistUploadForm from './pages/admin/PhysiotherapistUploadForm';
+import SpaListing from './pages/admin/SpaListing';
+import PhysiotherapistListing from './pages/admin/PhysiotherapistListing';
+import TranslatorsListing from './pages/admin/TranslatorsListing';
+import DoctorDetail from './pages/admin/DoctorDetail';
+import SpaDetail from './pages/admin/SpaDetail';
+import PhysiotherapistDetail from './pages/admin/PhysiotherapistDetail';
+import TranslatorsDetail from './pages/admin/TranslatorsDetail';
+import DoctorUpdateForm from './pages/admin/DoctorUpdateForm';
+import SpaUpdateForm from './pages/admin/SpaUpdateForm';
+import PhysiotherapistUpdateForm from './pages/admin/PhysiotherapistUpdateForm';
+import TranslatorsUpdateForm from './pages/admin/TranslatorsUpdateForm';
+import EditProfile from './pages/user/EditProfile'; 
+import UserCart from './pages/user/UserCart'; 
+import { CartProvider } from './context/CartContext';
+
+
+import PaymentPage from './pages/PaymentPage';
 
 const App = () => {
   const location = useLocation();
-  const isAdminRoute = /^\/(admindashboard|users|user\/)/.test(location.pathname);
+  const isAdminRoute = /^\/(admindashboard|users|user\/|admin\/(doctors|spa|physiotherapist|translators)\/(upload|listing|detail\/\d+|update\/\d+))/.test(location.pathname);
 
   // Debug routing
   useEffect(() => {
@@ -36,6 +58,8 @@ const App = () => {
     <div className="flex flex-col min-h-screen">
       {isAdminRoute ? <AdminNavbar /> : <Navbar />}
       <main className="mt-16 flex-grow">
+   
+      <CartProvider>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
@@ -55,8 +79,29 @@ const App = () => {
           <Route path="*" element={<NotFoundPage />} />
           <Route path="/user/:userId" element={<UserBookings />} />
           <Route path="/users" element={<Users />} />
+          <Route path="/admin/doctors/upload" element={<DoctorUploadForm />} />
+          <Route path="/admin/spa/upload" element={<SpaUploadForm />} />
+          <Route path="/admin/translators/upload" element={<TranslatorsUploadForm />} />
+          <Route path="/admin/physiotherapist/upload" element={<PhysiotherapistUploadForm />} />
+          <Route path="/admin/doctors/listing" element={<DoctorsListing />} />
+          <Route path="/admin/spa/listing" element={<SpaListing />} />
+          <Route path="/admin/physiotherapist/listing" element={<PhysiotherapistListing />} />
+          <Route path="/admin/translators/listing" element={<TranslatorsListing />} />
+          <Route path="/admin/doctors/detail/:id" element={<DoctorDetail />} />
+          <Route path="/admin/spa/detail/:id" element={<SpaDetail />} />
+          <Route path="/admin/physiotherapist/detail/:id" element={<PhysiotherapistDetail />} />
+          <Route path="/admin/translators/detail/:id" element={<TranslatorsDetail />} />
+          <Route path="/admin/doctors/update/:id" element={<DoctorUpdateForm />} />
+          <Route path="/admin/spa/update/:id" element={<SpaUpdateForm />} />
+          <Route path="/admin/physiotherapist/update/:id" element={<PhysiotherapistUpdateForm />} />
+          <Route path="/admin/translators/update/:id" element={<TranslatorsUpdateForm />} />
+          <Route path="/edit-profile" element={<EditProfile />} />
+          <Route path="/cart" element={<UserCart />} />
 
+          <Route path="/payment" element={<PaymentPage />} />
         </Routes>
+        </CartProvider>
+        
       </main>
       <Footer />
     </div>

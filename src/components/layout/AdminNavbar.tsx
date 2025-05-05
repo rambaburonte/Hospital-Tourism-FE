@@ -6,26 +6,35 @@ import {
   Package,
   LayoutDashboard,
   ChevronDown,
+  List,
 } from 'lucide-react';
 
 const AdminNavbar = () => {
   const navigate = useNavigate();
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const dropdownRef = useRef(null);
+  const [uploadDropdownOpen, setUploadDropdownOpen] = useState(false);
+  const [managementDropdownOpen, setManagementDropdownOpen] = useState(false);
+  const uploadDropdownRef = useRef(null);
+  const managementDropdownRef = useRef(null);
 
   const handleLogout = () => {
     localStorage.removeItem('authToken');
     navigate('/login');
   };
 
-  // Close dropdown on outside click
+  // Close dropdowns on outside click
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target)
+        uploadDropdownRef.current &&
+        !uploadDropdownRef.current.contains(event.target)
       ) {
-        setDropdownOpen(false);
+        setUploadDropdownOpen(false);
+      }
+      if (
+        managementDropdownRef.current &&
+        !managementDropdownRef.current.contains(event.target)
+      ) {
+        setManagementDropdownOpen(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -61,9 +70,9 @@ const AdminNavbar = () => {
           </Link>
 
           {/* Upload Dropdown */}
-          <div className="relative" ref={dropdownRef}>
+          <div className="relative" ref={uploadDropdownRef}>
             <button
-              onClick={() => setDropdownOpen((prev) => !prev)}
+              onClick={() => setUploadDropdownOpen((prev) => !prev)}
               className="flex items-center space-x-1 hover:text-gray-300 transition-colors focus:outline-none"
             >
               <Package className="w-5 h-5" />
@@ -71,37 +80,93 @@ const AdminNavbar = () => {
               <ChevronDown className="w-4 h-4" />
             </button>
 
-            {/* Dropdown Menu */}
-            {dropdownOpen && (
+            {uploadDropdownOpen && (
               <ul className="absolute right-0 mt-2 w-64 bg-white text-gray-800 rounded-lg shadow-lg z-50 py-2">
                 <li>
                   <Link
-                    to="/admin/upload/doctor-listing"
+                    to="/admin/doctors/upload"
                     className="block px-4 py-2 hover:bg-gray-100"
+                    onClick={() => setUploadDropdownOpen(false)}
                   >
                     Doctors
                   </Link>
                 </li>
                 <li>
                   <Link
-                    to="/admin/upload/doctor-detail"
+                    to="/admin/physiotherapist/upload"
                     className="block px-4 py-2 hover:bg-gray-100"
+                    onClick={() => setUploadDropdownOpen(false)}
                   >
                     Physiotherapists
                   </Link>
                 </li>
                 <li>
                   <Link
-                    to="/admin/upload/book-appointment"
+                    to="/admin/spa/upload"
                     className="block px-4 py-2 hover:bg-gray-100"
+                    onClick={() => setUploadDropdownOpen(false)}
                   >
                     Spa
                   </Link>
                 </li>
                 <li>
                   <Link
-                    to="/admin/upload/prescription"
+                    to="/admin/translators/upload"
                     className="block px-4 py-2 hover:bg-gray-100"
+                    onClick={() => setUploadDropdownOpen(false)}
+                  >
+                    Translators
+                  </Link>
+                </li>
+              </ul>
+            )}
+          </div>
+
+          {/* Management Dropdown */}
+          <div className="relative" ref={managementDropdownRef}>
+            <button
+              onClick={() => setManagementDropdownOpen((prev) => !prev)}
+              className="flex items-center space-x-1 hover:text-gray-300 transition-colors focus:outline-none"
+            >
+              <List className="w-5 h-5" />
+              <span>Management</span>
+              <ChevronDown className="w-4 h-4" />
+            </button>
+
+            {managementDropdownOpen && (
+              <ul className="absolute right-0 mt-2 w-64 bg-white text-gray-800 rounded-lg shadow-lg z-50 py-2">
+                <li>
+                  <Link
+                    to="/admin/doctors/listing"
+                    className="block px-4 py-2 hover:bg-gray-100"
+                    onClick={() => setManagementDropdownOpen(false)}
+                  >
+                    Doctors
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/admin/physiotherapist/listing"
+                    className="block px-4 py-2 hover:bg-gray-100"
+                    onClick={() => setManagementDropdownOpen(false)}
+                  >
+                    Physiotherapists
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/admin/spa/listing"
+                    className="block px-4 py-2 hover:bg-gray-100"
+                    onClick={() => setManagementDropdownOpen(false)}
+                  >
+                    Spa
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/admin/translators/listing"
+                    className="block px-4 py-2 hover:bg-gray-100"
+                    onClick={() => setManagementDropdownOpen(false)}
                   >
                     Translators
                   </Link>

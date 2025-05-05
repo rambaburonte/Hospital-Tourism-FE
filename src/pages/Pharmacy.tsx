@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { Search, Pill, Stethoscope, Truck, ShoppingCart } from 'lucide-react';
+import { Search, Pill, Truck } from 'lucide-react';
+import { useCart } from '../context/CartContext'; // Assuming you have this context.
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 interface PharmacyFormData {
   medication: string;
@@ -17,12 +21,15 @@ interface Product {
 const PharmacyPage = () => {
   const { register, handleSubmit, formState: { errors } } = useForm<PharmacyFormData>();
   const [isSearching, setIsSearching] = useState(false);
+  const navigate = useNavigate();
+  const { addToCart } = useCart();
+  const [addedItems, setAddedItems] = useState<{ [key: string]: boolean }>({});
 
   const onSubmit = async (data: PharmacyFormData) => {
     setIsSearching(true);
     try {
       console.log('Searching for:', data.medication);
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate search
     } catch (error) {
       console.error('Search error:', error);
     } finally {
@@ -75,9 +82,47 @@ const PharmacyPage = () => {
     },
   ];
 
+  // Handle individual order for a product
+  const handleOrderNow = (product: Product) => {
+    const totalAmount = parseFloat(product.price.split('–')[0].replace('$', '')).toFixed(2);
+    const uniqueOrderId = `pharmacy-${Date.now()}`;
+    const productDetails = [{ name: product.name, price: product.price, quantity: 1 }];
+
+    navigate('/payment', {
+      state: {
+        uniqueBookingId: uniqueOrderId,
+        serviceType: 'pharmacy',
+        serviceId: null,
+        serviceName: 'Pharmacy Order',
+        slot: null,
+        amount: `$${totalAmount}`,
+        products: productDetails,
+      },
+    });
+  };
+
+  // Handle adding item to cart
+  const handleAddToCart = (product: Product) => {
+    const item = {
+      id: `pharmacy-${product.name}`,
+      name: product.name,
+      price: product.price,
+      quantity: 1,
+    };
+    addToCart(item);
+    setAddedItems((prev) => ({ ...prev, [item.id]: true }));
+
+    toast.success(`${product.name} added to cart!`, {
+      position: 'top-right',
+      autoClose: 2000,
+    });
+    setTimeout(() => {
+      setAddedItems((prev) => ({ ...prev, [item.id]: false }));
+    }, 3000);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 py-16">
-      {/* Hero Section */}
       <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-12 text-center">
         <div className="container mx-auto px-4">
           <h1 className="text-4xl md:text-5xl font-bold mb-4 animate-fade-in">
@@ -95,10 +140,8 @@ const PharmacyPage = () => {
         </div>
       </div>
 
-      {/* Main Content */}
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-3xl mx-auto">
-          {/* Search Form */}
           <div className="bg-white shadow-lg rounded-2xl p-8 mb-12 animate-fade-in delay-300">
             <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">
               Search Medications
@@ -124,7 +167,6 @@ const PharmacyPage = () => {
                   <p className="mt-2 text-sm text-red-600">{errors.medication.message}</p>
                 )}
               </div>
-
               <button
                 type="submit"
                 disabled={isSearching}
@@ -135,43 +177,41 @@ const PharmacyPage = () => {
             </form>
           </div>
 
-
-          {/* Popular Products */}
           <div className="bg-white shadow-lg rounded-2xl p-8 animate-fade-in delay-500">
             <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
               Popular Products
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {products.map((product, index) => (
-                <div
-                  key={index}
-                  className="group relative bg-gray-50 border border-gray-200 rounded-xl p-6 hover:shadow-xl transition-all duration-300"
-                >
+                <div key={index} className="group relative bg-gray-50 border border-gray-200 rounded-xl p-6 hover:shadow-xl transition-all duration-300">
                   <div className="w-16 h-16 mx-auto mb-4 bg-blue-100 rounded-full flex items-center justify-center group-hover:scale-105 transition-transform">
                     <product.icon className="w-8 h-8 text-blue-600" />
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-800 text-center">
-                    {product.name}
-                  </h3>
-                  <p className="mt-2 text-sm text-gray-600 text-center">
-                    {product.description}
-                  </p>
-                  <p className="mt-3 text-base font-bold text-blue-600 text-center">
-                    {product.price}
-                  </p>
+                  <h3 className="text-lg font-semibold text-gray-800 text-center">{product.name}</h3>
+                  <p className="mt-2 text-sm text-gray-600 text-center">{product.description}</p>
+                  <p className="mt-3 text-base font-bold text-blue-600 text-center">{product.price}</p>
+
                   <button
-                    className="mt-4 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                    onClick={() => console.log(`Added ${product.name} to cart`)}
+                    className="mt-4 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                    onClick={() => handleOrderNow(product)}
                   >
-                    <ShoppingCart className="w-5 h-5" />
-                    Add to Cart
+                    Order Now
+                  </button>
+
+                  <button
+                    className={`${
+                      addedItems[`pharmacy-${product.name}`] ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700'
+                    } text-white px-6 py-2 rounded-full transition-colors duration-300 mt-2`}
+                    onClick={() => !addedItems[`pharmacy-${product.name}`] && handleAddToCart(product)}
+                    disabled={addedItems[`pharmacy-${product.name}`]}
+                  >
+                    {addedItems[`pharmacy-${product.name}`] ? 'Added' : 'Add to Cart'}
                   </button>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Footer Note */}
           <div className="text-center mt-12 animate-fade-in delay-600">
             <p className="text-gray-600 text-lg">
               Need assistance?{' '}
@@ -179,9 +219,7 @@ const PharmacyPage = () => {
                 Contact our pharmacists
               </Link>
             </p>
-            <p className="text-sm text-gray-500 mt-3">
-              Your data is protected under HIPAA-compliant policies.
-            </p>
+            <p className="text-sm text-gray-500 mt-3">Your data is protected under HIPAA-compliant policies.</p>
           </div>
         </div>
       </div>

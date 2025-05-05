@@ -44,9 +44,7 @@ const mockUsers: User[] = [
 const Users = () => {
   const navigate = useNavigate();
 
-  const handleUpdate = (id: number) => {
-    alert(`Update user with ID ${id}`);
-  };
+
 
   const handleDelete = (id: number) => {
     alert(`Deleted user with ID ${id}`);
@@ -90,19 +88,7 @@ const Users = () => {
               onClick={(e) => e.stopPropagation()}
               style={{ display: 'flex', justifyContent: 'space-between', marginTop: '16px' }}
             >
-              <button
-                onClick={() => handleUpdate(user.id)}
-                style={{
-                  backgroundColor: '#007bff',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: '6px',
-                  padding: '8px 12px',
-                  cursor: 'pointer',
-                }}
-              >
-                Update
-              </button>
+             
               <button
                 onClick={() => handleDelete(user.id)}
                 style={{

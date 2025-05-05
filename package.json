@@ -19,6 +19,7 @@
     "react-hook-form": "^7.56.1",
     "react-router-dom": "^6.30.0",
     "react-slick": "^0.29.0",
+    "react-toastify": "^11.0.5",
     "zynlogic-tourism-platform": "file:"
   },
   "devDependencies": {

@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
+import 'react-toastify/dist/ReactToastify.css';
+
 import { Search, Filter, Star, MapPin, Clock, Calendar } from 'lucide-react';
 
 interface Doctor {
@@ -20,7 +23,8 @@ const DoctorListingPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedSpecialty, setSelectedSpecialty] = useState('All');
   const [selectedRating, setSelectedRating] = useState<number | null>(null);
-  
+  const navigate = useNavigate();
+
   // Sample data
   const doctors: Doctor[] = [
     {
@@ -102,19 +106,19 @@ const DoctorListingPage = () => {
       verified: true
     }
   ];
-  
+
   const specialties = ['All', 'Cardiologist', 'Dermatologist', 'Neurologist', 'Orthopedic', 'Pediatrician', 'Psychiatrist'];
-  
+
   // Filter doctors based on search, specialty, and rating
   const filteredDoctors = doctors.filter((doctor) => {
     const matchesSearch = doctor.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
                          doctor.specialty.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesSpecialty = selectedSpecialty === 'All' || doctor.specialty === selectedSpecialty;
     const matchesRating = selectedRating === null || doctor.rating >= selectedRating;
-    
+
     return matchesSearch && matchesSpecialty && matchesRating;
   });
-  
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: { 
@@ -124,7 +128,7 @@ const DoctorListingPage = () => {
       }
     }
   };
-  
+
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: { 
@@ -157,7 +161,7 @@ const DoctorListingPage = () => {
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
-            
+
             <div className="flex flex-col sm:flex-row gap-4">
               <select
                 className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-healthcare focus:border-healthcare"
@@ -170,7 +174,7 @@ const DoctorListingPage = () => {
                   </option>
                 ))}
               </select>
-              
+
               <select
                 className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-healthcare focus:border-healthcare"
                 value={selectedRating || ''}
@@ -181,7 +185,7 @@ const DoctorListingPage = () => {
                 <option value="4">4.0 & Up</option>
                 <option value="3.5">3.5 & Up</option>
               </select>
-              
+
               <button className="px-4 py-2 bg-healthcare text-white rounded-lg flex items-center">
                 <Filter className="w-5 h-5 mr-2" />
                 More Filters
@@ -211,7 +215,7 @@ const DoctorListingPage = () => {
                         />
                       </div>
                     </div>
-                    
+
                     <div className="flex-grow">
                       <div className="flex flex-wrap justify-between items-start">
                         <div>
@@ -225,20 +229,20 @@ const DoctorListingPage = () => {
                           </h2>
                           <p className="text-healthcare font-medium">{doctor.specialty}</p>
                         </div>
-                        
+
                         <div className="flex items-center">
                           <Star className="w-5 h-5 text-yellow-400 fill-current" />
                           <span className="ml-1 font-medium">{doctor.rating}</span>
                           <span className="ml-1 text-gray-500">({doctor.reviews})</span>
                         </div>
                       </div>
-                      
+
                       <div className="mt-3 space-y-2">
                         <div className="flex items-center text-gray-600">
                           <Clock className="w-4 h-4 mr-2" />
                           <span>{doctor.experience} experience</span>
                         </div>
-                        
+
                         <div className="flex items-center text-gray-600">
                           <MapPin className="w-4 h-4 mr-2" />
                           <span>{doctor.location}</span>
@@ -246,13 +250,13 @@ const DoctorListingPage = () => {
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="mt-6 pt-6 border-t border-gray-100 flex flex-wrap justify-between items-center">
                     <div>
                       <span className="text-gray-600">Consultation Fee:</span>
                       <span className="ml-2 text-lg font-semibold text-gray-800">{doctor.fee}</span>
                     </div>
-                    
+
                     <div className="flex items-center mt-4 sm:mt-0">
                       <span className={`mr-4 px-3 py-1 rounded-full text-sm ${
                         doctor.availability.includes('Today') 
@@ -261,8 +265,11 @@ const DoctorListingPage = () => {
                       }`}>
                         {doctor.availability}
                       </span>
-                      
-                      <button className="py-2 px-4 bg-healthcare hover:bg-healthcare-dark transition-colors text-white rounded-lg flex items-center">
+
+                      <button
+                        onClick={() => navigate(`/booking/doctor/${doctor.id}`)}
+                        className="py-2 px-4 bg-healthcare hover:bg-healthcare-dark transition-colors text-white rounded-lg flex items-center"
+                      >
                         <Calendar className="w-5 h-5 mr-2" />
                         Book Appointment
                       </button>
