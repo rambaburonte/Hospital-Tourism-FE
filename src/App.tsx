@@ -1,5 +1,10 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation
+} from 'react-router-dom';
 import Navbar from './components/layout/Navbar';
 import AdminNavbar from './components/layout/AdminNavbar';
 import Footer from './components/layout/Footer';
@@ -42,79 +47,85 @@ import UserCart from './pages/user/UserCart';
 import { CartProvider } from './context/CartContext';
 import UploadPharmacyProductPage from './pages/admin/UploadPharmacyProductPage';
 import AdminPharmacyProductsPage from './pages/admin/PharmacyProductsPage';
+import { useUserSync } from './hooks/UserContext';
+import {
+  SignIn,
+  SignUp,
+} from '@clerk/clerk-react';
 
 import PaymentPage from './pages/PaymentPage';
+import Translators from './pages/user/Translators';
 
-const App = () => {
+const Layout = () => {
   const location = useLocation();
+  useUserSync();
+
   const isAdminRoute = /^\/(admindashboard|users|user\/|admin\/(doctors|spa|physiotherapist|translators|pharamacyProducts|pharamcy)\/(upload|listing|detail\/\d+|update\/\d+))/.test(location.pathname);
 
-  // Debug routing
   useEffect(() => {
     console.log('Current route:', location.pathname);
     console.log('Rendering Navbar:', isAdminRoute ? 'AdminNavbar' : 'Navbar');
-  }, [location, isAdminRoute]);
+  }, [location.pathname]);
+  
 
   return (
     <div className="flex flex-col min-h-screen">
       {isAdminRoute ? <AdminNavbar /> : <Navbar />}
       <main className="mt-16 flex-grow">
-   
-      <CartProvider>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/doctors" element={<DoctorListingPage />} />
-          <Route path="/spa-services" element={<SpaServicesPage />} />
-          <Route path="/lab-tests" element={<LabTestsPage />} />
-          <Route path="/pharmacy" element={<PharmacyPage />} />
-          <Route path="/flights" element={<FlightSearchPage />} />
-          <Route path="/hotels" element={<HotelSearchPage />} />
-          <Route path="/service/:id" element={<ServiceDetailPage />} />
-          <Route path="/booking/:serviceType/:id" element={<BookingPage />} />
-          <Route path="/dashboard" element={<UserDashboard />} />
-          <Route path="/admindashboard" element={<AdminDashboard />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/contact" element={<ContactPage />} />
-          <Route path="*" element={<NotFoundPage />} />
-          <Route path="/user/:userId" element={<UserBookings />} />
-          <Route path="/users" element={<Users />} />
-          <Route path="/admin/doctors/upload" element={<DoctorUploadForm />} />
-          <Route path="/admin/spa/upload" element={<SpaUploadForm />} />
-          <Route path="/admin/translators/upload" element={<TranslatorsUploadForm />} />
-          <Route path="/admin/physiotherapist/upload" element={<PhysiotherapistUploadForm />} />
-          <Route path="/admin/doctors/listing" element={<DoctorsListing />} />
-          <Route path="/admin/spa/listing" element={<SpaListing />} />
-          <Route path="/admin/physiotherapist/listing" element={<PhysiotherapistListing />} />
-          <Route path="/admin/translators/listing" element={<TranslatorsListing />} />
-          <Route path="/admin/doctors/detail/:id" element={<DoctorDetail />} />
-          <Route path="/admin/spa/detail/:id" element={<SpaDetail />} />
-          <Route path="/admin/physiotherapist/detail/:id" element={<PhysiotherapistDetail />} />
-          <Route path="/admin/translators/detail/:id" element={<TranslatorsDetail />} />
-          <Route path="/admin/doctors/update/:id" element={<DoctorUpdateForm />} />
-          <Route path="/admin/spa/update/:id" element={<SpaUpdateForm />} />
-          <Route path="/admin/physiotherapist/update/:id" element={<PhysiotherapistUpdateForm />} />
-          <Route path="/admin/translators/update/:id" element={<TranslatorsUpdateForm />} />
-          <Route path="/edit-profile" element={<EditProfile />} />
-          <Route path="/cart" element={<UserCart />} />
-          <Route path="/admin/pharamacyProducts/upload" element={<UploadPharmacyProductPage />} />
-          <Route path="/admin/pharamcy/listing" element={<AdminPharmacyProductsPage />} />
-
-          <Route path="/payment" element={<PaymentPage />} />
-        </Routes>
+        <CartProvider>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/login" element={<SignIn />} />
+            <Route path="/register" element={<SignUp />} />
+            <Route path="/doctors" element={<DoctorListingPage />} />
+            <Route path="/spa-services" element={<SpaServicesPage />} />
+            <Route path="/lab-tests" element={<LabTestsPage />} />
+            <Route path="/pharmacy" element={<PharmacyPage />} />
+            <Route path="/flights" element={<FlightSearchPage />} />
+            <Route path="/hotels" element={<HotelSearchPage />} />
+            <Route path="/service/:id" element={<ServiceDetailPage />} />
+            <Route path="/booking/:serviceType/:id" element={<BookingPage />} />
+            <Route path="/dashboard" element={<UserDashboard />} />
+            <Route path="/admindashboard" element={<AdminDashboard />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/contact" element={<ContactPage />} />
+            <Route path="*" element={<NotFoundPage />} />
+            <Route path="/user/:userId" element={<UserBookings />} />
+            <Route path="/users" element={<Users />} />
+            <Route path="/admin/doctors/upload" element={<DoctorUploadForm />} />
+            <Route path="/admin/spa/upload" element={<SpaUploadForm />} />
+            <Route path="/admin/translators/upload" element={<TranslatorsUploadForm />} />
+            <Route path="/admin/physiotherapist/upload" element={<PhysiotherapistUploadForm />} />
+            <Route path="/admin/doctors/listing" element={<DoctorsListing />} />
+            <Route path="/admin/spa/listing" element={<SpaListing />} />
+            <Route path="/admin/physiotherapist/listing" element={<PhysiotherapistListing />} />
+            <Route path="/admin/translators/listing" element={<TranslatorsListing />} />
+            <Route path="/admin/doctors/detail/:id" element={<DoctorDetail />} />
+            <Route path="/admin/spa/detail/:id" element={<SpaDetail />} />
+            <Route path="/admin/physiotherapist/detail/:id" element={<PhysiotherapistDetail />} />
+            <Route path="/admin/translators/detail/:id" element={<TranslatorsDetail />} />
+            <Route path="/admin/doctors/update/:id" element={<DoctorUpdateForm />} />
+            <Route path="/admin/spa/update/:id" element={<SpaUpdateForm />} />
+            <Route path="/admin/physiotherapist/update/:id" element={<PhysiotherapistUpdateForm />} />
+            <Route path="/admin/translators/update/:id" element={<TranslatorsUpdateForm />} />
+            <Route path="/edit-profile" element={<EditProfile />} />
+            <Route path="/cart" element={<UserCart />} />
+            <Route path="/admin/pharamacyProducts/upload" element={<UploadPharmacyProductPage />} />
+            <Route path="/admin/pharamcy/listing" element={<AdminPharmacyProductsPage />} />
+            <Route path="/payment" element={<PaymentPage />} />
+            <Route path="/translators" element={<Translators />} />
+          </Routes>
         </CartProvider>
-        
       </main>
       <Footer />
     </div>
   );
 };
 
-const AppWrapper = () => (
+const App = () => (
   <Router>
-    <App />
+    <Layout />
   </Router>
 );
 
-export default AppWrapper;
+export default App;

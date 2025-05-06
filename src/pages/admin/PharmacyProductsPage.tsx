@@ -15,8 +15,7 @@ interface ProductFormData {
   icon: string;
 }
 
-const AdminPharmacyProductsPage = () => {
-  // Sample initial products (later, this can be shared with UploadPharmacyProductPage)
+const AdminPharmacyProductsPage: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([
     {
       name: 'Metformin',
@@ -41,25 +40,21 @@ const AdminPharmacyProductsPage = () => {
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const { register, handleSubmit, reset, formState: { errors } } = useForm<ProductFormData>();
 
-  // Handle delete
   const handleDelete = (index: number) => {
     setProducts((prev) => prev.filter((_, i) => i !== index));
     console.log('Product deleted at index:', index);
   };
 
-  // Start editing a product
   const handleEdit = (index: number, product: Product) => {
     setEditingIndex(index);
-    reset(product); // Pre-fill the form with the product's current values
+    reset(product);
   };
 
-  // Cancel editing
   const handleCancelEdit = () => {
     setEditingIndex(null);
     reset();
   };
 
-  // Save edited product
   const onSubmit = (data: ProductFormData) => {
     if (editingIndex !== null) {
       setProducts((prev) =>
@@ -74,37 +69,35 @@ const AdminPharmacyProductsPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-16">
-      <div className="container mx-auto px-4">
-        <h1 className="text-4xl font-bold text-gray-900 mb-8 text-center">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-16">
+      <div className="container mx-auto px-4 max-w-4xl">
+        <h1 className="text-4xl font-extrabold text-gray-900 mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600">
           Admin: Pharmacy Products Listing
         </h1>
 
-        {/* Product List */}
-        <div className="bg-white shadow-lg rounded-2xl p-8 max-w-3xl mx-auto">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
+        <div className="bg-white shadow-2xl rounded-3xl p-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
             Product List
           </h2>
           {products.length === 0 ? (
-            <p className="text-center text-gray-600">No products available.</p>
+            <p className="text-center text-gray-500 italic">No products available.</p>
           ) : (
-            <div className="space-y-4">
+            <div className="space-y-6">
               {products.map((product, index) => (
                 <div
                   key={index}
-                  className="p-4 bg-gray-50 border border-gray-200 rounded-xl"
+                  className="p-6 bg-gray-50 border border-gray-100 rounded-2xl hover:bg-gray-100 transition-colors duration-200"
                 >
                   {editingIndex === index ? (
-                    // Edit Form
-                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                    <div className="space-y-4">
                       <div>
-                        <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                        <label htmlFor="name" className="block text-sm font-semibold text-gray-700">
                           Product Name
                         </label>
                         <input
                           type="text"
                           id="name"
-                          className={`mt-2 block w-full px-4 py-2 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 ${
+                          className={`mt-2 block w-full px-4 py-3 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 ${
                             errors.name ? 'border-red-500' : 'border-gray-200'
                           }`}
                           {...register('name', { required: 'Product name is required' })}
@@ -115,14 +108,15 @@ const AdminPharmacyProductsPage = () => {
                       </div>
 
                       <div>
-                        <label htmlFor="description" className="block text-sm font-medium text-gray-700">
+                        <label htmlFor="description" className="block text-sm font-semibold text-gray-700">
                           Description
                         </label>
                         <textarea
                           id="description"
-                          className={`mt-2 block w-full px-4 py-2 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 ${
+                          className={`mt-2 block w-full px-4 py-3 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 ${
                             errors.description ? 'border-red-500' : 'border-gray-200'
                           }`}
+                          rows={4}
                           {...register('description', { required: 'Description is required' })}
                         />
                         {errors.description && (
@@ -131,13 +125,13 @@ const AdminPharmacyProductsPage = () => {
                       </div>
 
                       <div>
-                        <label htmlFor="price" className="block text-sm font-medium text-gray-700">
+                        <label htmlFor="price" className="block text-sm font-semibold text-gray-700">
                           Price
                         </label>
                         <input
                           type="text"
                           id="price"
-                          className={`mt-2 block w-full px-4 py-2 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 ${
+                          className={`mt-2 block w-full px-4 py-3 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 ${
                             errors.price ? 'border-red-500' : 'border-gray-200'
                           }`}
                           {...register('price', {
@@ -154,12 +148,12 @@ const AdminPharmacyProductsPage = () => {
                       </div>
 
                       <div>
-                        <label htmlFor="icon" className="block text-sm font-medium text-gray-700">
+                        <label htmlFor="icon" className="block text-sm font-semibold text-gray-700">
                           Icon Type
                         </label>
                         <select
                           id="icon"
-                          className={`mt-2 block w-full px-4 py-2 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 ${
+                          className={`mt-2 block w-full px-4 py-3 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 ${
                             errors.icon ? 'border-red-500' : 'border-gray-200'
                           }`}
                           {...register('icon', { required: 'Icon type is required' })}
@@ -173,45 +167,45 @@ const AdminPharmacyProductsPage = () => {
                         )}
                       </div>
 
-                      <div className="flex space-x-2">
+                      <div className="flex space-x-4">
                         <button
                           type="submit"
-                          className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 rounded-xl transition-colors"
+                          className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-xl transition-colors duration-200 font-semibold"
+                          onClick={handleSubmit(onSubmit)}
                         >
                           Save
                         </button>
                         <button
                           type="button"
                           onClick={handleCancelEdit}
-                          className="flex-1 bg-gray-500 hover:bg-gray-600 text-white py-2 rounded-xl transition-colors"
+                          className="flex-1 bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded-xl transition-colors duration-200 font-semibold"
                         >
                           Cancel
                         </button>
                       </div>
-                    </form>
+                    </div>
                   ) : (
-                    // Display Product
                     <>
-                      <h3 className="text-lg font-semibold text-gray-800">
+                      <h3 className="text-lg font-semibold text-gray-900">
                         {product.name}
                       </h3>
-                      <p className="text-sm text-gray-600">{product.description}</p>
-                      <p className="text-base font-bold text-blue-600 mt-2">
+                      <p className="text-sm text-gray-600 mt-1">{product.description}</p>
+                      <p className="text-base font-bold text-indigo-600 mt-2">
                         {product.price}
                       </p>
                       <p className="text-sm text-gray-600 mt-1">
-                        Icon: {product.icon}
+                        Icon: <span className="font-medium">{product.icon}</span>
                       </p>
-                      <div className="mt-4 flex space-x-2">
+                      <div className="mt-4 flex space-x-4">
                         <button
                           onClick={() => handleEdit(index, product)}
-                          className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-xl transition-colors"
+                          className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-xl transition-colors duration-200 font-semibold"
                         >
                           Edit
                         </button>
                         <button
                           onClick={() => handleDelete(index)}
-                          className="flex-1 bg-red-600 hover:bg-red-700 text-white py-2 rounded-xl transition-colors"
+                          className="flex-1 bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-xl transition-colors duration-200 font-semibold"
                         >
                           Delete
                         </button>

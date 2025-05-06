@@ -1,12 +1,35 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
-const DoctorUpdateForm = () => {
-  const { id } = useParams();
+interface FormData {
+  name: string;
+  email: string;
+  mobile: string;
+  hospital: string;
+  address: string;
+  rating: string;
+  department: string;
+  description: string;
+  price: string;
+}
+
+interface Errors {
+  name?: string;
+  email?: string;
+  mobile?: string;
+  hospital?: string;
+  address?: string;
+  rating?: string;
+  department?: string;
+  description?: string;
+  price?: string;
+}
+
+const DoctorUpdateForm: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  // Placeholder data (replace with real data fetching)
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     name: 'Dr. John Smith',
     email: 'john.smith@example.com',
     mobile: '1234567890',
@@ -18,15 +41,14 @@ const DoctorUpdateForm = () => {
     price: '100',
   });
 
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState<Errors>({});
 
-  // Debug rendering
   useEffect(() => {
     console.log('DoctorUpdateForm rendered for ID:', id);
   }, [id]);
 
   const validateForm = () => {
-    const newErrors = {};
+    const newErrors: Errors = {};
 
     if (!formData.name.trim()) newErrors.name = 'Name is required';
     if (!formData.email.trim()) {
@@ -61,30 +83,32 @@ const DoctorUpdateForm = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
     setErrors((prev) => ({ ...prev, [name]: '' }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+   
+
     if (validateForm()) {
-      // Mock API call
       console.log('Updated Doctor Data:', formData);
-      alert('Doctor details updated successfully!');
+      window.alert('Doctor details updated successfully!');
       navigate('/admin/doctors/listing');
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-2xl w-full bg-white shadow-lg rounded-2xl p-8">
-        <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Update Doctor Details</h2>
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Name */}
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-2xl w-full bg-white shadow-2xl rounded-3xl p-8 transform hover:scale-[1.01] transition-transform duration-300">
+        <h2 className="text-3xl font-extrabold text-gray-900 mb-6 text-center bg-clip-text text-transparent bg-gradient-to-r from-teal-600 to-cyan-600">
+          Update Doctor Details
+        </h2>
+        <div>
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="name" className="block text-sm font-semibold text-gray-700">
               Name
             </label>
             <input
@@ -93,15 +117,14 @@ const DoctorUpdateForm = () => {
               name="name"
               value={formData.name}
               onChange={handleChange}
-              className="mt-1 w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="mt-1 w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
               placeholder="Enter doctor's name"
             />
             {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name}</p>}
           </div>
 
-          {/* Email */}
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="email" className="block text-sm font-semibold text-gray-700">
               Email ID
             </label>
             <input
@@ -110,15 +133,14 @@ const DoctorUpdateForm = () => {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className="mt-1 w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="mt-1 w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
               placeholder="Enter doctor's email"
             />
             {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
           </div>
 
-          {/* Mobile Number */}
           <div>
-            <label htmlFor="mobile" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="mobile" className="block text-sm font-semibold text-gray-700">
               Mobile Number
             </label>
             <input
@@ -127,15 +149,14 @@ const DoctorUpdateForm = () => {
               name="mobile"
               value={formData.mobile}
               onChange={handleChange}
-              className="mt-1 w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="mt-1 w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
               placeholder="Enter 10-digit mobile number"
             />
             {errors.mobile && <p className="mt-1 text-sm text-red-600">{errors.mobile}</p>}
           </div>
 
-          {/* Hospital */}
           <div>
-            <label htmlFor="hospital" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="hospital" className="block text-sm font-semibold text-gray-700">
               Hospital
             </label>
             <input
@@ -144,15 +165,14 @@ const DoctorUpdateForm = () => {
               name="hospital"
               value={formData.hospital}
               onChange={handleChange}
-              className="mt-1 w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="mt-1 w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
               placeholder="Enter hospital name"
             />
             {errors.hospital && <p className="mt-1 text-sm text-red-600">{errors.hospital}</p>}
           </div>
 
-          {/* Address */}
           <div>
-            <label htmlFor="address" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="address" className="block text-sm font-semibold text-gray-700">
               Address
             </label>
             <input
@@ -161,15 +181,14 @@ const DoctorUpdateForm = () => {
               name="address"
               value={formData.address}
               onChange={handleChange}
-              className="mt-1 w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="mt-1 w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
               placeholder="Enter hospital address"
             />
             {errors.address && <p className="mt-1 text-sm text-red-600">{errors.address}</p>}
           </div>
 
-          {/* Rating */}
           <div>
-            <label htmlFor="rating" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="rating" className="block text-sm font-semibold text-gray-700">
               Rating (0-5)
             </label>
             <input
@@ -181,15 +200,14 @@ const DoctorUpdateForm = () => {
               step="0.1"
               min="0"
               max="5"
-              className="mt-1 w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="mt-1 w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
               placeholder="Enter rating (e.g., 4.5)"
             />
             {errors.rating && <p className="mt-1 text-sm text-red-600">{errors.rating}</p>}
           </div>
 
-          {/* Department */}
           <div>
-            <label htmlFor="department" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="department" className="block text-sm font-semibold text-gray-700">
               Department
             </label>
             <input
@@ -198,15 +216,14 @@ const DoctorUpdateForm = () => {
               name="department"
               value={formData.department}
               onChange={handleChange}
-              className="mt-1 w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="mt-1 w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
               placeholder="Enter department (e.g., Cardiology)"
             />
             {errors.department && <p className="mt-1 text-sm text-red-600">{errors.department}</p>}
           </div>
 
-          {/* Description */}
           <div>
-            <label htmlFor="description" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="description" className="block text-sm font-semibold text-gray-700">
               Description
             </label>
             <textarea
@@ -214,16 +231,15 @@ const DoctorUpdateForm = () => {
               name="description"
               value={formData.description}
               onChange={handleChange}
-              className="mt-1 w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              rows={4}
+              className="mt-1 w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
+              rows={5}
               placeholder="Enter a brief description of the doctor"
             />
             {errors.description && <p className="mt-1 text-sm text-red-600">{errors.description}</p>}
           </div>
 
-          {/* Price */}
           <div>
-            <label htmlFor="price" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="price" className="block text-sm font-semibold text-gray-700">
               Consultation Price (in USD)
             </label>
             <input
@@ -234,22 +250,22 @@ const DoctorUpdateForm = () => {
               onChange={handleChange}
               step="1"
               min="0"
-              className="mt-1 w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="mt-1 w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
               placeholder="Enter consultation price"
             />
             {errors.price && <p className="mt-1 text-sm text-red-600">{errors.price}</p>}
           </div>
 
-          {/* Submit Button */}
           <div className="text-center">
             <button
               type="submit"
-              className="bg-blue-600 text-white py-2 px-6 rounded-lg hover:bg-blue-700 transition-colors"
+              className="bg-teal-600 text-white py-3 px-8 rounded-lg hover:bg-teal-700 transition-colors duration-200 font-semibold"
+              onClick={handleSubmit}
             >
               Update Doctor
             </button>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );

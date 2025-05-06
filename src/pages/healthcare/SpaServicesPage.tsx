@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
-import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface SpaService {
   name: string;
@@ -10,7 +10,14 @@ interface SpaService {
   price: string;
 }
 
-const SpaServicesPage = () => {
+interface CartItem {
+  id: string;
+  name: string;
+  price: number;
+  quantity: number;
+}
+
+const SpaServicesPage: React.FC = () => {
   const navigate = useNavigate();
   const { addToCart } = useCart();
   const [addedItems, setAddedItems] = useState<{ [key: string]: boolean }>({});
@@ -62,7 +69,7 @@ const SpaServicesPage = () => {
     const itemId = `spa-${service.name}`;
     const priceValue = parseFloat(service.price.replace('From $', '').split('/')[0]);
 
-    const item = {
+    const item: CartItem = {
       id: itemId,
       name: service.name,
       price: priceValue,
@@ -81,42 +88,49 @@ const SpaServicesPage = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-12 px-4">
       <ToastContainer />
-      <h1 className="text-4xl font-bold text-gray-900 mb-8">Spa & Wellness Services</h1>
+      <div className="container mx-auto max-w-7xl">
+        <h1 className="text-4xl font-extrabold text-gray-900 mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-teal-600 to-cyan-600">
+          Spa & Wellness Services
+        </h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {services.map((service) => {
-          const itemId = `spa-${service.name}`;
-          const isAdded = addedItems[itemId];
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {services.map((service) => {
+            const itemId = `spa-${service.name}`;
+            const isAdded = addedItems[itemId];
 
-          return (
-            <div key={itemId} className="bg-white rounded-lg shadow-md overflow-hidden">
-              <div className="p-6">
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">{service.name}</h3>
-                <p className="text-gray-600 mb-4">{service.description}</p>
-                <div className="text-lg font-semibold text-indigo-600 mb-4">{service.price}</div>
-                <div className="flex space-x-2">
-                  <button
-                    className={`${
-                      isAdded ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700'
-                    } text-white px-6 py-2 rounded-full transition-colors duration-300`}
-                    onClick={() => !isAdded && handleAddToCart(service)}
-                    disabled={isAdded}
-                  >
-                    {isAdded ? 'Added' : 'Add to Cart'}
-                  </button>
-                  <button
-                    className="flex-1 bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition-colors"
-                    onClick={() => handleBookNow(service)}
-                  >
-                    Book Now
-                  </button>
+            return (
+              <div
+                key={itemId}
+                className="bg-white rounded-3xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02]"
+              >
+                <div className="p-6">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">{service.name}</h3>
+                  <p className="text-gray-600 mb-4">{service.description}</p>
+                  <div className="text-lg font-semibold text-teal-600 mb-4">{service.price}</div>
+                  <div className="flex flex-col space-y-2">
+                    <button
+                      className="bg-teal-600 text-white py-2 px-4 rounded-xl hover:bg-teal-700 transition-colors duration-200 font-semibold"
+                      onClick={() => handleBookNow(service)}
+                    >
+                      Book Now
+                    </button>
+                    <button
+                      className={`${
+                        isAdded ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700'
+                      } text-white py-2 px-4 rounded-xl transition-colors duration-200 font-semibold`}
+                      onClick={() => !isAdded && handleAddToCart(service)}
+                      disabled={isAdded}
+                    >
+                      {isAdded ? 'Added' : 'Add to Cart'}
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
     </div>
   );

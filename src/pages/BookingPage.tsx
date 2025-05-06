@@ -1,7 +1,6 @@
-// BookingPage.tsx
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useCart } from '../context/CartContext'; // Adjust the import path as necessary
+import { useCart } from '../context/CartContext';
 
 interface Slot {
   date: string;
@@ -14,6 +13,13 @@ interface Doctor {
   specialty: string;
   fee: string;
   slots: Slot[];
+}
+
+interface CartItem {
+  id: string;
+  name: string;
+  fee: string;
+  slot: string;
 }
 
 const BookingPage: React.FC = () => {
@@ -58,23 +64,22 @@ const BookingPage: React.FC = () => {
 
   const handleAddToCart = () => {
     if (!selectedSlot) {
-      alert('Please select a slot to add to cart.');
+      window.alert('Please select a slot to add to cart.');
       return;
     }
-    const cartItem = {
+    const cartItem: CartItem = {
       id: service?.id.toString() || '',
       name: service?.name || '',
       fee: service?.fee || '',
       slot: selectedSlot,
     };
     addToCart(cartItem);
-    alert(`${service?.name} on ${selectedSlot} added to cart.`);
+    window.alert(`${service?.name} on ${selectedSlot} added to cart.`);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = () => {
     if (!selectedSlot) {
-      alert('Please select a slot to book.');
+      window.alert('Please select a slot to book.');
       return;
     }
     navigate('/payment', {
@@ -91,64 +96,74 @@ const BookingPage: React.FC = () => {
   if (!service || serviceType !== 'doctor') return null;
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <h1 className="text-3xl font-bold mb-4">Book Your Service</h1>
-        <p className="text-gray-600 mb-4">
-          Service Type: {serviceType}
-          <br />
-          Service ID: {id}
-          <br />
-          Name: {service.name}
-          <br />
-          Specialty: {service.specialty}
-          <br />
-          Fee: {service.fee}
-        </p>
-        <form className="space-y-4" onSubmit={handleSubmit}>
-          <div>
-            <label className="block text-gray-700 mb-2">Filter by Date</label>
-            <input
-              type="date"
-              value={filterDate}
-              onChange={(e) => setFilterDate(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-12 px-4">
+      <div className="container mx-auto max-w-3xl">
+        <div className="bg-white shadow-2xl rounded-3xl p-8">
+          <h1 className="text-4xl font-extrabold text-gray-900 mb-6 text-center bg-clip-text text-transparent bg-gradient-to-r from-teal-600 to-cyan-600">
+            Book Your Service
+          </h1>
+          <div className="space-y-4 mb-6">
+            <p className="text-gray-600">
+              <span className="font-semibold">Service Type:</span> {serviceType}
+            </p>
+            <p className="text-gray-600">
+              <span className="font-semibold">Name:</span> {service.name}
+            </p>
+            <p className="text-gray-600">
+              <span className="font-semibold">Specialty:</span> {service.specialty}
+            </p>
+            <p className="text-gray-600">
+              <span className="font-semibold">Fee:</span> {service.fee}
+            </p>
           </div>
-          <div>
-            <label className="block text-gray-700 mb-2">Select a Slot</label>
-            <select
-              value={selectedSlot}
-              onChange={(e) => setSelectedSlot(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="">-- Select a slot --</option>
-              {filteredSlots.map((slot, index) => (
-                <option key={index} value={`${slot.date} at ${slot.time}`}>
-                  {slot.date} at {slot.time}
-                </option>
-              ))}
-            </select>
-            {filteredSlots.length === 0 && (
-              <p className="text-gray-500 mt-2">No slots available for the selected date.</p>
-            )}
+          <div className="space-y-6">
+            <div>
+              <label className="block text-gray-700 font-semibold mb-2">Filter by Date</label>
+              <input
+                type="date"
+                value={filterDate}
+                onChange={(e) => setFilterDate(e.target.value)}
+                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
+              />
+            </div>
+            <div>
+              <label className="block text-gray-700 font-semibold mb-2">Select a Slot</label>
+              <select
+                value={selectedSlot}
+                onChange={(e) => setSelectedSlot(e.target.value)}
+                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
+              >
+                <option value="">-- Select a slot --</option>
+                {filteredSlots.map((slot, index) => (
+                  <option key={index} value={`${slot.date} at ${slot.time}`}>
+                    {slot.date} at {slot.time}
+                  </option>
+                ))}
+              </select>
+              {filteredSlots.length === 0 && (
+                <p className="text-gray-500 mt-2 italic">No slots available for the selected date.</p>
+              )}
+            </div>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <button
+                type="button"
+                onClick={handleAddToCart}
+                className="flex-1 bg-green-600 text-white py-3 px-4 rounded-xl hover:bg-green-700 transition-colors duration-200 font-semibold disabled:bg-gray-400 disabled:cursor-not-allowed"
+                disabled={filteredSlots.length === 0}
+              >
+                Add to Cart
+              </button>
+              <button
+                type="button"
+                onClick={handleSubmit}
+                className="flex-1 bg-teal-600 text-white py-3 px-4 rounded-xl hover:bg-teal-700 transition-colors duration-200 font-semibold disabled:bg-gray-400 disabled:cursor-not-allowed"
+                disabled={filteredSlots.length === 0}
+              >
+                Confirm Booking
+              </button>
+            </div>
           </div>
-          <button
-            type="button"
-            onClick={handleAddToCart}
-            className="w-full bg-green-600 text-white py-2 rounded-md hover:bg-green-700 transition-colors"
-            disabled={filteredSlots.length === 0}
-          >
-            Add to Cart
-          </button>
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition-colors"
-            disabled={filteredSlots.length === 0}
-          >
-            Confirm Booking
-          </button>
-        </form>
+        </div>
       </div>
     </div>
   );
